@@ -37,3 +37,5 @@ Google suggest response: ["fille onu",["discours jeune fille onu","discours peti
 Querying for 'onu'
 Google suggest response: ["onu",["onu","onur tuna","onuc traian","onuc","onur air","onu romania","onur saylak","onu trans","onu referat","onufrie vinteler"]]
 ```
+# Known Issues
+1. Google Suggest API occasionally sends a response that does not respect the format of a valid response. The program fails to parse it and exits.
