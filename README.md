@@ -1,8 +1,10 @@
 # Description
-Standalone Google suggest API java client.  
-It starts to query the Google suggest API with an initial user supplied term, then continues to do so devising the next query based on the last answer.
+_A little piece of AI left on its own ..._    
+Pass it an initial query and instructions on how to come up with its next query, then sit back and observe.
 
 # Usage
+It is a standalone Google suggest API java client.
+
 You can invoke it using the Maven exec plugin:  
 `mvn clean test exec:java -Dexec.mainClass="lc.gs.GoogleSuggestJaxRsXClient" -Dexec.args="%classpath" -Dexec.args="<initial query>"`
 
