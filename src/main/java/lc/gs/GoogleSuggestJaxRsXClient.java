@@ -15,13 +15,13 @@ import java.io.IOException;
  *     <li>the first suggestion that starts with the current suggestion but it has more words than it</li>
  *     <li>otherwise, the current query minus its first word</li>
  * </ul>
- * It stops when it can no create a next query.
+ * It stops when it can no longer create a next query.
  * <br />
  * Usage: <pre>
  *     java lc.gs.GoogleSuggestJaxRsXClient &lt;initial_query&gt;
  * </pre>
  * 
- * @author lucian.ciufudean
+ * @author lucian.ciufudean@gmail.com
  */
 public class GoogleSuggestJaxRsXClient {
 
@@ -30,7 +30,7 @@ public class GoogleSuggestJaxRsXClient {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         validateArgs(args);
-        String query = args[0];
+        String query = String.join(" ", args);
         
         GoogleSuggestJaxRsXClient client = new GoogleSuggestJaxRsXClient();
         client.setNextQueryStrategy(new LongerNextQueryStrategyImpl());
@@ -65,14 +65,19 @@ public class GoogleSuggestJaxRsXClient {
      * <code>null</code> if no such option.
      */
     private String[] getSuggestions(String query) throws IOException {
-        String fullResponse = getServerResponseBodyAsJson(query);
-        System.out.println("Google suggest response: " + fullResponse);
-        return jsonToSuggestionArray(fullResponse);
+        String response = getServerResponseBodyAsJson(query);
+        System.out.println("Google suggest response: " + response);
+        return parseResponseToSuggestions(response);
     }
 
-    private String[] jsonToSuggestionArray(String fullResponse) throws IOException {
+    private String[] parseResponseToSuggestions(String response) throws IOException {
+        String preprocessedResponse = preprocessResponse(response);
         final ObjectMapper mapper = new ObjectMapper().enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-        return mapper.readValue(fullResponse, String[][].class)[1];
+        return mapper.readValue(preprocessedResponse, String[][].class)[1];
+    }
+
+    private String preprocessResponse(String response) {
+        return response.replaceFirst("\\{.+\\}", "[]");
     }
 
     private String getServerResponseBodyAsJson(String query) {
